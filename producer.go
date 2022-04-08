@@ -222,6 +222,11 @@ func NewProducer(config Config) *Producer {
 					run = false
 				case message = <-MessageChannel:
 
+					err := registerTopicPartition(upstreamTopicInternalTracking, message.Topic, logger, producer, config)
+					if err != nil {
+						fmt.Errorf("Error while registering partition.", err)
+					}
+
 					msgMetaData := MessageInfo{
 						Partition: message.Partition,
 						Topic:     message.Topic,
