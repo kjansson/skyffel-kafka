@@ -224,10 +224,10 @@ func NewProducer(config Config) *Producer {
 				case message = <-MessageChannel:
 
 					if _, ok := upstreamTopicInternalTracking[message.Topic]; !ok {
-						upstreamTopicInternalTracking[message.Topic] = internalTopicMetadata{}
+						//	upstreamTopicInternalTracking[message.Topic] =
 
-						topicTracking := upstreamTopicInternalTracking[message.Topic]
-
+						//topicTracking := upstreamTopicInternalTracking[message.Topic]
+						topicTracking := internalTopicMetadata{}
 						topicMetadata, err := producer.GetMetadata(&message.Topic, false, 5000)
 						topicTracking.partitions = len(topicMetadata.Topics[message.Topic].Partitions)
 						fmt.Printf("Registered new topic %s with %d partitions", message.Topic, topicTracking.partitions)
@@ -239,6 +239,7 @@ func NewProducer(config Config) *Producer {
 						for i := 0; i < int(topicTracking.partitions); i++ {
 							topicTracking.lastReportedOffset[i] = 0
 						}
+						upstreamTopicInternalTracking[message.Topic] = topicTracking
 					}
 
 					msgMetaData := MessageInfo{
