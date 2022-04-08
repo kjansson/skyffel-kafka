@@ -28,24 +28,25 @@ type internalTopicMetadata struct {
 	partitions         int
 }
 
-func registerTopicPartition(topicInternalTracking map[string]internalTopicMetadata, topic string, logger *log.Logger, producer *kafka.Producer, config Config) error {
-	if _, ok := topicInternalTracking[topic]; !ok {
-		topicInternalTracking[topic] = internalTopicMetadata{}
+// func registerTopicPartition(topicInternalTracking map[string]internalTopicMetadata, topic string, logger *log.Logger, producer *kafka.Producer, config Config) error {
+// 	if _, ok := topicInternalTracking[topic]; !ok {
+// 		topicInternalTracking[topic] = internalTopicMetadata{}
 
-		topicTracking := topicInternalTracking[topic]
+// 		topicTracking := topicInternalTracking[topic]
 
-		topicMetadata, err := producer.GetMetadata(&topic, false, 5000)
-		topicTracking.partitions = len(topicMetadata.Topics[topic].Partitions)
-		if err != nil {
-			return fmt.Errorf("Could not get metadata from broker: %s\n", err)
-		}
-		topicTracking.lastReportedOffset = make(map[int]int64)
-		for i := 0; i < int(topicTracking.partitions); i++ {
-			topicTracking.lastReportedOffset[i] = 0
-		}
-	}
-	return nil
-}
+// 		topicMetadata, err := producer.GetMetadata(&topic, false, 5000)
+// 		topicTracking.partitions = len(topicMetadata.Topics[topic].Partitions)
+// 		fmt.Printf("Registered new topic %s with %d partitions", topic, topicTracking.partitions)
+// 		if err != nil {
+// 			return fmt.Errorf("Could not get metadata from broker: %s\n", err)
+// 		}
+// 		topicTracking.lastReportedOffset = make(map[int]int64)
+// 		for i := 0; i < int(topicTracking.partitions); i++ {
+// 			topicTracking.lastReportedOffset[i] = 0
+// 		}
+// 	}
+// 	return nil
+// }
 
 // NewProducer returns a wrapped confluent-kafka producer, witch channels for sending messages, reading events, and offset information
 func NewProducer(config Config) *Producer {
@@ -222,9 +223,22 @@ func NewProducer(config Config) *Producer {
 					run = false
 				case message = <-MessageChannel:
 
-					err := registerTopicPartition(upstreamTopicInternalTracking, message.Topic, logger, producer, config)
-					if err != nil {
-						fmt.Errorf("Error while registering partition.", err)
+					if _, ok := upstreamTopicInternalTracking[message.Topic]; !ok {
+						upstreamTopicInternalTracking[message.Topic] = internalTopicMetadata{}
+
+						topicTracking := upstreamTopicInternalTracking[message.Topic]
+
+						topicMetadata, err := producer.GetMetadata(&message.Topic, false, 5000)
+						topicTracking.partitions = len(topicMetadata.Topics[message.Topic].Partitions)
+						fmt.Printf("Registered new topic %s with %d partitions", message.Topic, topicTracking.partitions)
+						if err != nil {
+							fmt.Printf("Could not get metadata from broker: %s\n", err)
+							return
+						}
+						topicTracking.lastReportedOffset = make(map[int]int64)
+						for i := 0; i < int(topicTracking.partitions); i++ {
+							topicTracking.lastReportedOffset[i] = 0
+						}
 					}
 
 					msgMetaData := MessageInfo{
