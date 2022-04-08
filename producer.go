@@ -65,7 +65,7 @@ func NewProducer(config Config) *Producer {
 	eventChannel := make(chan kafka.Event, config.EventChannelSize)
 	MessageChannel := make(chan Message, config.MessageChannelSize)
 
-	err := defcon.CheckConfigStruct(config)
+	err := defcon.CheckConfigStruct(&config)
 	if err != nil {
 		logger.Fatal("Error while parsing config:", err)
 	}

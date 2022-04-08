@@ -33,7 +33,7 @@ func NewConsumer(config Config) *Consumer {
 
 	var assignedPartitions map[string][]int
 
-	err := defcon.CheckConfigStruct(config)
+	err := defcon.CheckConfigStruct(&config)
 	if err != nil {
 		logger.Fatal("Error while parsing config:", err)
 	}
