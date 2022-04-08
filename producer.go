@@ -235,6 +235,7 @@ func NewProducer(config Config) *Producer {
 					}
 					if err != nil {
 						logger.Println("Warning: partitioner could not use message key, using random partition.")
+						fmt.Printf("We have %d partitions\n", upstreamTopicInternalTracking[message.Topic].partitions)
 						partition = int32(rand.Intn(upstreamTopicInternalTracking[message.Topic].partitions))
 						if config.CustomPartitioner == nil {
 							partition, err = murmur2Hash(message.Key, int32(upstreamTopicInternalTracking[message.Topic].partitions))
