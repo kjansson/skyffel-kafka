@@ -33,13 +33,11 @@ func NewConsumer(config Config) *Consumer {
 
 	var assignedPartitions map[string][]int
 
-	kafkaConfig := kafka.ConfigMap{}
-
-	err := defcon.CheckConfigStruct(kafkaConfig)
+	err := defcon.CheckConfigStruct(config)
 	if err != nil {
 		logger.Fatal("Error while parsing config:", err)
 	}
-
+	kafkaConfig := kafka.ConfigMap{}
 	// Transfer kafka config to confluent-kafka-go
 	for key, val := range config.KafkaConfig {
 		kafkaConfig[key] = val

@@ -65,12 +65,11 @@ func NewProducer(config Config) *Producer {
 	eventChannel := make(chan kafka.Event, config.EventChannelSize)
 	MessageChannel := make(chan Message, config.MessageChannelSize)
 
-	kafkaConfig := kafka.ConfigMap{}
-	err := defcon.CheckConfigStruct(kafkaConfig)
+	err := defcon.CheckConfigStruct(config)
 	if err != nil {
 		logger.Fatal("Error while parsing config:", err)
 	}
-
+	kafkaConfig := kafka.ConfigMap{}
 	// Transfer kafka config to confluent Kafka
 	for key, val := range config.KafkaConfig {
 		kafkaConfig[key] = val
