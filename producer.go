@@ -55,7 +55,7 @@ func NewProducer(config Config) *Producer {
 	var trackingLock = sync.RWMutex{}
 	var message Message
 	var run bool = true
-	var upstreamTopicInternalTracking map[string]internalTopicMetadata
+	upstreamTopicInternalTracking := make(map[string]internalTopicMetadata)
 	var partition int32
 
 	signalChannel := make(chan os.Signal, 1)
