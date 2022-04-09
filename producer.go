@@ -172,6 +172,9 @@ func NewProducer(config Config) *Producer {
 								logger.Fatalln("Offset channel is full, are offsets not being handled? Exiting.")
 							}
 						} else { // If we have the consumer pointer, send directly to the consumers commit channel
+							if config.Debug {
+								logger.Println("Producer sending commit information directly to consumer.")
+							}
 							config.Consumer.CommitChannel <- commitMessage
 						}
 					}
