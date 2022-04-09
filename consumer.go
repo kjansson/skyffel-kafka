@@ -68,7 +68,7 @@ func NewConsumer(config Config) *Consumer {
 			commit := <-commitChannel
 			c.Commit(commit)
 			if config.Debug {
-				logger.Println("DEBUG: consumer commit.")
+				logger.Printf("DEBUG: consumer commit, topic %s, partition %d, offset %d.\n", commit.Topic, commit.Partition, commit.Offset)
 			}
 		}
 	}()
