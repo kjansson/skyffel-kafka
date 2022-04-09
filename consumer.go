@@ -91,6 +91,7 @@ func NewConsumer(config Config) *Consumer {
 					Partition: int(e.TopicPartition.Partition),
 					Topic:     *e.TopicPartition.Topic,
 					Offset:    upstreamOffset,
+					Key:       string(e.Key),
 				}
 				dataChannel <- outgoingData
 			case kafka.Error:
