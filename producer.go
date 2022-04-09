@@ -173,9 +173,12 @@ func NewProducer(config Config) *Producer {
 							}
 						} else { // If we have the consumer pointer, send directly to the consumers commit channel
 							if config.Debug {
-								logger.Println("Producer sending commit information directly to consumer.")
+								logger.Println("Sending commit information directly to consumer.")
 							}
 							config.Consumer.CommitChannel <- commitMessage
+							if config.Debug {
+								logger.Println("Commit sent.")
+							}
 						}
 					}
 				}
