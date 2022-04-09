@@ -59,6 +59,7 @@ func NewConsumer(config Config) *Consumer {
 	c := &Consumer{
 		Consumer:       consumer,
 		MessageChannel: dataChannel,
+		CommitChannel:  commitChannel,
 		config:         config,
 	}
 
