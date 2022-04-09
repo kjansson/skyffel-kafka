@@ -64,8 +64,8 @@ func NewConsumer(config Config) *Consumer {
 
 	go func() {
 		for {
-
-			c.Commit(<-commitChannel)
+			commit := <-commitChannel
+			c.Commit(commit)
 			if config.Debug {
 				logger.Println("DEBUG: consumer commit.")
 			}
