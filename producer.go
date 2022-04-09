@@ -277,6 +277,9 @@ func NewProducer(config Config) *Producer {
 							Value:          []byte(message.Data),
 							Opaque:         msgMetaData,
 						}
+						if config.Debug {
+							logger.Println("DEBUG: message produced on topic", message.Topic)
+						}
 					}
 				}
 			} else {
