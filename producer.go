@@ -210,9 +210,7 @@ func NewProducer(config Config) *Producer {
 				case message = <-MessageChannel:
 
 					if _, ok := upstreamTopicInternalTracking[message.Topic]; !ok {
-						//	upstreamTopicInternalTracking[message.Topic] =
 
-						//topicTracking := upstreamTopicInternalTracking[message.Topic]
 						topicTracking := internalTopicMetadata{}
 						topicMetadata, err := producer.GetMetadata(&message.Topic, false, 5000)
 						topicTracking.partitions = len(topicMetadata.Topics[message.Topic].Partitions)
