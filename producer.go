@@ -28,26 +28,6 @@ type internalTopicMetadata struct {
 	partitions         int
 }
 
-// func registerTopicPartition(topicInternalTracking map[string]internalTopicMetadata, topic string, logger *log.Logger, producer *kafka.Producer, config Config) error {
-// 	if _, ok := topicInternalTracking[topic]; !ok {
-// 		topicInternalTracking[topic] = internalTopicMetadata{}
-
-// 		topicTracking := topicInternalTracking[topic]
-
-// 		topicMetadata, err := producer.GetMetadata(&topic, false, 5000)
-// 		topicTracking.partitions = len(topicMetadata.Topics[topic].Partitions)
-// 		fmt.Printf("Registered new topic %s with %d partitions", topic, topicTracking.partitions)
-// 		if err != nil {
-// 			return fmt.Errorf("Could not get metadata from broker: %s\n", err)
-// 		}
-// 		topicTracking.lastReportedOffset = make(map[int]int64)
-// 		for i := 0; i < int(topicTracking.partitions); i++ {
-// 			topicTracking.lastReportedOffset[i] = 0
-// 		}
-// 	}
-// 	return nil
-// }
-
 // NewProducer returns a wrapped confluent-kafka producer, witch channels for sending messages, reading events, and offset information
 func NewProducer(config Config) *Producer {
 
